@@ -34,12 +34,9 @@ from vosk import Model, KaldiRecognizer
 from vosk import GpuInit, GpuInstantiate
 
 GpuInit()
- def thread_init():
-     GpuInstantiate()
-# pool = concurrent.futures.ThreadPoolExecutor(initializer=thread_init)
+def thread_init():
+    GpuInstantiate()
 
-
-# Uncomment for better memory usage
 import gc
 gc.set_threshold(0)
 
