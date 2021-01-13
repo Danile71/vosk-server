@@ -31,9 +31,16 @@ from google.protobuf import duration_pb2
 
 from vosk import Model, KaldiRecognizer
 
+GpuInit()
+ def thread_init():
+     GpuInstantiate()
+  server = grpc.server(futures.ThreadPoolExecutor(initializer=thread_init)
+# pool = concurrent.futures.ThreadPoolExecutor(initializer=thread_init)
+
+
 # Uncomment for better memory usage
-# import gc
-# gc.set_threshold(0)
+import gc
+gc.set_threshold(0)
 
 vosk_interface = os.environ.get('VOSK_SERVER_INTERFACE', '0.0.0.0')
 vosk_port = int(os.environ.get('VOSK_SERVER_PORT', 5001))
@@ -91,7 +98,7 @@ class SttServiceServicer(stt_service_pb2_grpc.SttServiceServicer):
         yield self.get_response(recognizer.FinalResult())
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor((os.cpu_count() or 1)))
+#    server = grpc.server(futures.ThreadPoolExecutor((os.cpu_count() or 1)))
     stt_service_pb2_grpc.add_SttServiceServicer_to_server(
         SttServiceServicer(), server)
     server.add_insecure_port('{}:{}'.format(vosk_interface, vosk_port))
