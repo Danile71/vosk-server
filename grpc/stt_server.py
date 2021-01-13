@@ -96,7 +96,7 @@ class SttServiceServicer(stt_service_pb2_grpc.SttServiceServicer):
         yield self.get_response(recognizer.FinalResult())
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(initializer=thread_init, max_workers=(os.cpu_count() or 1)))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=(os.cpu_count() or 1)))
     stt_service_pb2_grpc.add_SttServiceServicer_to_server(
         SttServiceServicer(), server)
     server.add_insecure_port('{}:{}'.format(vosk_interface, vosk_port))
@@ -105,5 +105,6 @@ def serve():
 
 
 if __name__ == '__main__':
+    thread_init()
     logging.basicConfig()
     serve()
